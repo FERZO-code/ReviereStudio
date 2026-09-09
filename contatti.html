@@ -23,7 +23,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&family=Cormorant+Garamond:ital,wght@1,400;1,500;1,600&display=swap">
-  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style.css?v=2">
 
   <script type="application/ld+json">
   {
@@ -126,18 +126,24 @@
             <p class="eyebrow">Il modulo</p>
             <h2 class="display-md" style="margin:10px 0 12px">Richiedi <span class="script">disponibilit&agrave;</span>.</h2>
             <div class="prose" style="margin-bottom:32px">
-              <p>I campi con <span class="req">*</span> sono obbligatori. Di solito rispondiamo entro 24 ore;
-              se hai fretta, WhatsApp &egrave; la via pi&ugrave; veloce.</p>
+              <p>Compila i campi con <span class="req">*</span>: il pulsante apre WhatsApp con la
+              richiesta gi&agrave; scritta, tu premi invio e ti rispondiamo in chat. Di solito entro 24 ore.</p>
             </div>
 
             <!--
-              CONFIGURAZIONE INVIO
-              Senza "data-endpoint" il modulo apre una email precompilata (funziona ovunque,
-              anche su hosting statico). Per ricevere i messaggi via server, incolla qui l'URL
-              del servizio (es. Formspree/Basin/Netlify Forms) in data-endpoint.
+              DOVE ARRIVANO LE RICHIESTE
+              Cosi' com'e', il pulsante apre WhatsApp con la richiesta gia' scritta:
+              e' il visitatore a premere invio, quindi il messaggio arriva nella chat
+              di +39 331 962 3778. Non serve nessun server.
+              Sotto il pulsante resta il collegamento per mandarla via email.
+
+              Se un giorno vuoi riceverle su un server (Formspree, Basin, Netlify
+              Forms), incolla l'URL del servizio in data-endpoint: da quel momento
+              l'invio avviene in background e WhatsApp non viene piu' aperto.
             -->
             <form class="form" data-contact-form novalidate
                   data-endpoint=""
+                  data-whatsapp="393319623778"
                   data-mailto="info@revierestudio.it">
 
               <div class="form__summary" data-form-summary hidden>
@@ -216,8 +222,14 @@
 
               <div class="form__status" data-form-status role="status" aria-live="polite" hidden></div>
 
-              <div>
-                <button class="btn btn--primary" type="submit" data-form-submit>Invia la richiesta</button>
+              <div class="form__send">
+                <button class="btn btn--wa" type="submit" data-form-submit>
+                  <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" ><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91S17.5 2 12.04 2z" fill="none"/><path d="M9.2 7.3c-.2-.45-.4-.46-.6-.47h-.5c-.17 0-.46.07-.7.32-.24.25-.92.9-.92 2.18s.94 2.53 1.07 2.71c.13.17 1.82 2.92 4.49 3.98 2.22.87 2.67.7 3.15.66.48-.05 1.55-.63 1.77-1.24.22-.61.22-1.13.15-1.24-.06-.11-.24-.17-.5-.3-.26-.13-1.55-.76-1.79-.85-.24-.09-.41-.13-.59.13-.17.25-.67.85-.82 1.02-.15.18-.3.2-.56.07-.26-.13-1.11-.41-2.11-1.3-.78-.7-1.31-1.55-1.46-1.81-.15-.26-.02-.4.11-.53.12-.12.26-.3.39-.46.13-.15.17-.26.26-.44.09-.17.04-.33-.02-.46-.07-.13-.58-1.42-.8-1.94z"/></svg> Invia su WhatsApp
+                </button>
+                <p class="form__alt">
+                  Non usi WhatsApp?
+                  <a href="mailto:info@revierestudio.it" data-form-mail>Invia la richiesta via email</a>
+                </p>
               </div>
             </form>
           </div>
@@ -389,6 +401,6 @@
   </footer>
 
 
-  <script src="assets/js/main.js" defer></script>
+  <script src="assets/js/main.js?v=2" defer></script>
 </body>
 </html>

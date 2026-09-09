@@ -319,9 +319,12 @@
 
   /* ---------------------------------------------------------------------------
      5. Contact form
-     Client-side validation with a linked error summary. Submission goes to the
-     endpoint in data-endpoint when one is configured; otherwise it falls back to
-     a pre-filled e-mail draft so the form still works on static hosting.
+     Client-side validation with a linked error summary, then one of three routes:
+       1. data-endpoint set  -> POST in background (needs a form service)
+       2. otherwise          -> opens WhatsApp with the request already written
+       3. secondary link     -> same request as a pre-filled e-mail
+     Routes 2 and 3 need no server: the visitor sends the message from their own
+     account, so the request arrives in the venue's own WhatsApp or inbox.
      ------------------------------------------------------------------------ */
   function initForm() {
     var form = document.querySelector('[data-contact-form]');
@@ -333,6 +336,8 @@
     var submitBtn = form.querySelector('[data-form-submit]');
     var endpoint = (form.dataset.endpoint || '').trim();
     var mailto = form.dataset.mailto || '';
+    var whatsapp = (form.dataset.whatsapp || '').replace(/\D/g, '');
+    var mailLink = form.querySelector('[data-form-mail]');
 
     var RULES = {
       nome:      function (v) { return v.trim().length >= 2 || 'Inserisci il tuo nome e cognome.'; },
@@ -379,18 +384,78 @@
       });
     });
 
+    // 2026-06-12 -> 12/06/2026
+    function formatDate(iso) {
+      var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
+      return m ? m[3] + '/' + m[2] + '/' + m[1] : '';
+    }
+
     function buildBody(data) {
       return [
         'Nome: ' + data.nome,
         'Email: ' + data.email,
         'Telefono: ' + (data.telefono || '—'),
         'Tipo di evento: ' + data.tipo,
-        'Data desiderata: ' + (data.data || '—'),
+        'Data desiderata: ' + (formatDate(data.data) || '—'),
         'Numero ospiti: ' + (data.ospiti || '—'),
         '',
         'Messaggio:',
         data.messaggio
       ].join('\n');
+    }
+
+    // Su WhatsApp il testo si legge in chat: niente etichette vuote.
+    function buildWhatsappText(data) {
+      var lines = ['Ciao Reviere Studio, vorrei informazioni per un evento.', ''];
+      lines.push('Nome: ' + data.nome);
+      lines.push('Tipo di evento: ' + data.tipo);
+      if (formatDate(data.data)) lines.push('Data: ' + formatDate(data.data));
+      if (data.ospiti) lines.push('Ospiti: circa ' + data.ospiti);
+      lines.push('Email: ' + data.email);
+      if (data.telefono) lines.push('Telefono: ' + data.telefono);
+      lines.push('', data.messaggio);
+      return lines.join('\n');
+    }
+
+    function collect() {
+      var data = {};
+      new FormData(form).forEach(function (value, key) { data[key] = value; });
+      return data;
+    }
+
+    // Ritorna true se il modulo e' completo; altrimenti mostra gli errori.
+    function validateAll() {
+      var errors = [];
+      Object.keys(RULES).forEach(function (name) {
+        var el = form.elements[name];
+        if (!el) return;
+        var msg = validateField(el);
+        if (msg) errors.push({ el: el, msg: msg });
+      });
+
+      if (!errors.length) {
+        if (summary) summary.hidden = true;
+        return true;
+      }
+
+      if (errors.length > 1 && summary && summaryList) {
+        summaryList.innerHTML = errors.map(function (err) {
+          return '<li><a href="#' + err.el.id + '">' + err.msg + '</a></li>';
+        }).join('');
+        summary.hidden = false;
+        summary.setAttribute('tabindex', '-1');
+        summary.focus();
+      } else {
+        if (summary) summary.hidden = true;
+        errors[0].el.focus();
+      }
+      return false;
+    }
+
+    // Apre in una nuova scheda; se il browser la blocca, naviga nella stessa.
+    function openExternal(url) {
+      var win = window.open(url, '_blank', 'noopener');
+      if (!win) window.location.href = url;
     }
 
     function showStatus(kind, html) {
@@ -400,67 +465,68 @@
       statusBox.innerHTML = html;
     }
 
+    function sendByMail(data) {
+      var subject = 'Richiesta ' + data.tipo + ' — ' + data.nome;
+      window.location.href = 'mailto:' + mailto +
+        '?subject=' + encodeURIComponent(subject) +
+        '&body=' + encodeURIComponent(buildBody(data));
+      showStatus('ok',
+        '<strong>Abbiamo aperto il tuo programma di posta</strong> con la richiesta gi&agrave; scritta: ' +
+        'premi invio per spedirla. Se non si &egrave; aperto nulla, scrivici a ' +
+        '<a href="mailto:' + mailto + '">' + mailto + '</a>.');
+    }
+
+    function sendByWhatsapp(data) {
+      openExternal('https://wa.me/' + whatsapp +
+        '?text=' + encodeURIComponent(buildWhatsappText(data)));
+      showStatus('ok',
+        '<strong>Abbiamo aperto WhatsApp con la richiesta gi&agrave; scritta.</strong> ' +
+        'Premi invio nella chat per mandarcela: da l&igrave; ti rispondiamo direttamente. ' +
+        'Se WhatsApp non si &egrave; aperto, usa il collegamento qui sotto per inviarla via email.');
+    }
+
+    // Percorso secondario: stessa richiesta, ma via email.
+    if (mailLink) {
+      mailLink.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (statusBox) statusBox.hidden = true;
+        if (validateAll()) sendByMail(collect());
+      });
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (statusBox) statusBox.hidden = true;
+      if (!validateAll()) return;
 
-      var errors = [];
-      Object.keys(RULES).forEach(function (name) {
-        var el = form.elements[name];
-        if (!el) return;
-        var msg = validateField(el);
-        if (msg) errors.push({ el: el, msg: msg });
-      });
+      var data = collect();
 
-      if (errors.length) {
-        if (errors.length > 1 && summary && summaryList) {
-          summaryList.innerHTML = errors.map(function (err) {
-            return '<li><a href="#' + err.el.id + '">' + err.msg + '</a></li>';
-          }).join('');
-          summary.hidden = false;
-          summary.setAttribute('tabindex', '-1');
-          summary.focus();
-        } else {
-          if (summary) summary.hidden = true;
-          errors[0].el.focus();
-        }
+      if (!endpoint) {
+        // Senza servizio di invio il messaggio parte dall'account del visitatore:
+        // WhatsApp se configurato, altrimenti la posta.
+        if (whatsapp) sendByWhatsapp(data);
+        else sendByMail(data);
         return;
       }
-      if (summary) summary.hidden = true;
-
-      var data = {};
-      new FormData(form).forEach(function (value, key) { data[key] = value; });
 
       submitBtn.disabled = true;
-      var originalLabel = submitBtn.textContent;
+      var originalLabel = submitBtn.innerHTML;
       submitBtn.textContent = 'Invio in corso…';
 
-      function done() {
+      fetch(endpoint, {
+        method: 'POST',
+        headers: { Accept: 'application/json' },
+        body: new FormData(form)
+      }).then(function (res) {
+        if (!res.ok) throw new Error('bad status');
+        form.reset();
+        showStatus('ok', '<strong>Richiesta inviata.</strong> Ti rispondiamo entro 24 ore.');
+      }).catch(function () {
+        showStatus('err', '<strong>Invio non riuscito.</strong> Riprova, oppure scrivici su WhatsApp.');
+      }).finally(function () {
         submitBtn.disabled = false;
-        submitBtn.textContent = originalLabel;
-      }
-
-      if (endpoint) {
-        fetch(endpoint, {
-          method: 'POST',
-          headers: { Accept: 'application/json' },
-          body: new FormData(form)
-        }).then(function (res) {
-          if (!res.ok) throw new Error('bad status');
-          form.reset();
-          showStatus('ok', '<strong>Richiesta inviata.</strong> Ti risponderemo entro 24 ore. Per una risposta immediata scrivici su WhatsApp.');
-        }).catch(function () {
-          showStatus('err', '<strong>Invio non riuscito.</strong> Riprova tra poco oppure scrivici direttamente su WhatsApp o via email.');
-        }).finally(done);
-      } else {
-        // Static fallback: open a pre-filled e-mail draft.
-        var subject = 'Richiesta ' + data.tipo + ' — ' + data.nome;
-        window.location.href = 'mailto:' + mailto +
-          '?subject=' + encodeURIComponent(subject) +
-          '&body=' + encodeURIComponent(buildBody(data));
-        showStatus('ok', '<strong>Abbiamo aperto il tuo programma di posta</strong> con la richiesta già compilata: premi invio per spedirla. Se non si è aperto nulla, scrivici su WhatsApp o a <a href="mailto:' + mailto + '">' + mailto + '</a>.');
-        done();
-      }
+        submitBtn.innerHTML = originalLabel;
+      });
     });
   }
 

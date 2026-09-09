@@ -54,25 +54,64 @@ Le coordinate usate nei dati strutturati sono `41.0032095, 16.9998911`. Se il ci
 
 ## Modulo di contatto
 
-Il sito è statico, quindi il modulo non ha un server proprio.
+Il sito è statico, quindi il modulo non ha un server proprio. Le richieste
+arrivano **su WhatsApp**.
 
-**Come funziona ora (senza configurazione):** il modulo valida i campi e poi apre
-il programma di posta dell'utente con la richiesta già compilata. Funziona ovunque,
-ma dipende dal client email di chi visita il sito.
+**Come funziona.** Il modulo valida i campi, poi apre WhatsApp con la richiesta
+già scritta nella chat di `+39 331 962 3778`. È il visitatore a premere invio dal
+proprio account: da lì la conversazione continua normalmente in chat.
+Sotto il pulsante c'è il collegamento *"Invia la richiesta via email"*, che manda
+gli stessi dati come email precompilata per chi non usa WhatsApp.
 
-**Come riceverlo via server (consigliato):** apri `contatti.html`, trova
-`data-endpoint=""` e incolla l'URL di un servizio per form statici — per esempio
-[Formspree](https://formspree.io), [Basin](https://usebasin.com) o Netlify Forms:
+Il messaggio che parte è formattato per essere leggibile in chat, con la data
+convertita in formato italiano e i campi vuoti omessi:
+
+```
+Ciao Reviere Studio, vorrei informazioni per un evento.
+
+Nome: Mario Rossi
+Tipo di evento: Laurea
+Data: 12/06/2026
+Ospiti: circa 60
+Email: mario.rossi@example.it
+Telefono: +39 340 1112223
+
+Vorrei festeggiare la laurea di mia figlia, siamo circa 60.
+```
+
+**Il limite da conoscere:** il messaggio non parte da solo, si apre la chat già
+compilata e l'utente deve premere invio. Se chiude prima, la richiesta si perde.
+Su telefono è un attrito minimo (WhatsApp è già aperto e loggato); da computer
+serve WhatsApp Web attivo, altrimenti resta il collegamento email.
+
+**Numero di destinazione:** attributo `data-whatsapp` sul `<form>` in
+`contatti.html`, in formato internazionale senza `+` e senza spazi
+(`393319623778`).
+
+**Se un giorno vuoi riceverle su un server** (per avere uno storico e non
+dipendere dall'invio manuale), incolla l'URL di un servizio per form statici —
+[Formspree](https://formspree.io), [Basin](https://usebasin.com), Netlify Forms —
+in `data-endpoint`:
 
 ```html
 <form class="form" data-contact-form novalidate
       data-endpoint="https://formspree.io/f/xxxxxxxx"
+      data-whatsapp="393319623778"
       data-mailto="info@revierestudio.it">
 ```
 
-Da quel momento l'invio avviene in background e l'utente vede il messaggio di conferma
-sulla pagina, senza aprire il client di posta. Il fallback email resta attivo se
-l'endpoint è vuoto o se la chiamata fallisce.
+Da quel momento l'invio avviene in background con conferma sulla pagina, e
+WhatsApp non viene più aperto dal pulsante.
+
+## Quando modifichi CSS o JavaScript
+
+`style.css` e `main.js` sono richiamati con un numero di versione
+(`?v=2`) nelle tre pagine. **Alzalo di uno** dopo ogni modifica a quei due file,
+altrimenti chi ha già visitato il sito continua a vedere la versione in cache:
+
+```bash
+cd site && sed -i '' 's/?v=2/?v=3/g' *.html
+```
 
 ## Anteprima in locale
 
