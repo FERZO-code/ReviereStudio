@@ -563,8 +563,13 @@ h1, h2, h3, h4 {
 
   /* Il sottotitolo scende in basso a sinistra. Va tolto dal flusso e
      ancorato alla sezione, non al blocco centrato: per questo il body
-     torna statico. Cosi' il marquee resta al centro da solo. */
-  .hero__body { position: static; }
+     torna statico. Nel blocco centrato resta il solo marquee.
+     Il padding inferiore in piu' lo alza: il contenuto e' centrato, quindi
+     lo spostamento verso l'alto vale meta' del valore aggiunto. */
+  .hero__body {
+    position: static;
+    padding-bottom: calc(var(--nav-h) + 16px + 10svh);
+  }
 
   .hero__sub {
     position: absolute;
