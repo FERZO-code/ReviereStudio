@@ -485,7 +485,8 @@ h1, h2, h3, h4 {
   width: 100%;
   max-width: 1560px;
   margin-inline: auto;
-  padding: calc(var(--nav-h) + 24px) var(--gutter) clamp(132px, 17vh, 190px);
+  padding-block: calc(var(--nav-h) + 16px);
+  padding-inline: var(--gutter);
 }
 
 .hero__title {
@@ -507,9 +508,9 @@ h1, h2, h3, h4 {
   width: 100vw;
   max-width: 100vw;
   margin-left: calc(50% - 50vw);
-  margin-block: 8px 30px;
+  margin-block: 24px;
   overflow: hidden;
-  font-size: clamp(2.6rem, 6.8vw, 7.2rem);
+  font-size: clamp(3.6rem, 7.6vw, 7.2rem);
   line-height: 1;
   letter-spacing: -0.038em;
 }
@@ -554,6 +555,30 @@ h1, h2, h3, h4 {
 }
 
 .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
+
+/* Sui telefoni l'hero resta alla sola dichiarazione: i due pulsanti sono
+   gia' raggiungibili dal menu e dal tasto WhatsApp fisso in basso a destra. */
+@media (max-width: 767px) {
+  .hero__actions { display: none; }
+
+  /* Il sottotitolo scende in basso a sinistra. Va tolto dal flusso e
+     ancorato alla sezione, non al blocco centrato: per questo il body
+     torna statico. Cosi' il marquee resta al centro da solo. */
+  .hero__body { position: static; }
+
+  .hero__sub {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    /* Sollevato sopra il tasto WhatsApp fisso: cosi' usa tutta la larghezza
+       invece di essere strizzato di lato, e la misura resta leggibile. */
+    bottom: calc(env(safe-area-inset-bottom) + 112px);
+    margin: 0;
+    max-width: none;
+    text-align: left;
+    text-wrap: pretty;
+  }
+}
 
 
 /* Page hero (interior pages) ---------------------------------------------- */
@@ -1235,7 +1260,13 @@ a.contact-item__value:hover { color: var(--sand); }
   }
   .reveal { opacity: 1; transform: none; }
 
-  .marquee { overflow: visible; width: auto; max-width: 100%; margin-left: 0; }
+  .marquee {
+    overflow: visible;
+    width: auto;
+    max-width: 100%;
+    margin-left: 0;
+    font-size: clamp(2rem, 6.4vw, 5rem);
+  }
   .marquee__track { animation: none; width: auto; justify-content: center; }
   .marquee__seq:not(:first-child),
   .marquee__item:not(:first-of-type),
