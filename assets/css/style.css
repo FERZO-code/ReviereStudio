@@ -455,29 +455,14 @@ h1, h2, h3, h4 {
   isolation: isolate;
 }
 
-.hero__slides { position: absolute; inset: 0; z-index: -2; }
+.hero__media { position: absolute; inset: 0; z-index: -2; }
+.hero__media picture { display: block; width: 100%; height: 100%; }
 
-.hero__slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 1400ms var(--ease);
-}
-.hero__slide.is-active { opacity: 1; }
-
-.hero__slide img {
+.hero__media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: var(--pos, center);
-  transform: scale(1.04);
-}
-.hero__slide.is-active img {
-  animation: heroZoom 9s linear forwards;
-}
-@keyframes heroZoom {
-  from { transform: scale(1.04); }
-  to   { transform: scale(1.13); }
+  object-position: center;
 }
 
 .hero__scrim {
@@ -512,6 +497,55 @@ h1, h2, h3, h4 {
   margin-block: 14px 26px;
 }
 
+/* --------------------------------------------------------------------------
+   Marquee del titolo
+   Il titolo esce dal contenitore centrato e scorre da bordo a bordo.
+   La pista contiene due sequenze identiche: scorrendo di -50% ricomincia
+   esattamente dove si trovava, quindi il ciclo non ha stacchi.
+   -------------------------------------------------------------------------- */
+.marquee {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-block: 8px 30px;
+  overflow: hidden;
+  font-size: clamp(2.6rem, 6.8vw, 7.2rem);
+  line-height: 1;
+  letter-spacing: -0.038em;
+}
+
+.marquee__track {
+  display: flex;
+  width: max-content;
+  animation: marquee-scroll 60s linear infinite;
+  will-change: transform;
+}
+
+.marquee__seq { display: flex; align-items: center; }
+
+.marquee__item { white-space: nowrap; }
+
+/* Rombo in rosso di marchio fra una ripetizione e l'altra: da' il ritmo
+   e fa capire dove finisce la frase. */
+.marquee__sep {
+  flex: none;
+  width: 0.26em;
+  height: 0.26em;
+  margin-inline: 0.42em;
+  background: var(--red-line);
+  transform: rotate(45deg);
+}
+
+@keyframes marquee-scroll {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+/* Si ferma quando ci passi sopra o quando riceve il focus da tastiera,
+   cosi' la frase si puo' leggere ferma. */
+.marquee:hover .marquee__track,
+.marquee:focus-within .marquee__track { animation-play-state: paused; }
+
 .hero__sub {
   font-size: clamp(1rem, 1.45vw, 1.18rem);
   color: var(--bone-dim);
@@ -520,61 +554,6 @@ h1, h2, h3, h4 {
 }
 
 .hero__actions { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; }
-
-/* Carousel controls */
-.hero__controls {
-  position: absolute;
-  left: var(--gutter);
-  right: var(--gutter);
-  bottom: clamp(28px, 5vh, 52px);
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-align: left;
-}
-
-.hero__dots { display: flex; gap: 8px; }
-.hero__dot {
-  width: 44px;
-  height: 44px;
-  display: grid;
-  place-items: center;
-  position: relative;
-}
-.hero__dot::after {
-  content: '';
-  width: 34px;
-  height: 2px;
-  background: rgba(242, 237, 230, 0.24);
-  transition: background var(--dur) var(--ease), height var(--dur) var(--ease);
-}
-.hero__dot[aria-selected='true']::after { background: var(--bone); height: 3px; }
-.hero__dot:hover::after { background: var(--bone-dim); }
-
-.hero__nav-btn {
-  width: 44px;
-  height: 44px;
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius);
-  display: grid;
-  place-items: center;
-  transition: border-color var(--dur) var(--ease), background var(--dur) var(--ease);
-}
-.hero__nav-btn:hover { border-color: var(--bone); background: rgba(242, 237, 230, 0.08); }
-.hero__nav-btn svg { width: 16px; height: 16px; }
-
-@media (max-width: 599px) {
-  .hero__counter { display: none; }
-}
-
-.hero__counter {
-  font-family: var(--font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-  margin-left: auto;
-}
 
 
 /* Page hero (interior pages) ---------------------------------------------- */
@@ -1255,5 +1234,11 @@ a.contact-item__value:hover { color: var(--sand); }
     transition-duration: 0.001ms !important;
   }
   .reveal { opacity: 1; transform: none; }
-  .hero__slide.is-active img { animation: none; transform: scale(1.04); }
+
+  .marquee { overflow: visible; width: auto; max-width: 100%; margin-left: 0; }
+  .marquee__track { animation: none; width: auto; justify-content: center; }
+  .marquee__seq:not(:first-child),
+  .marquee__item:not(:first-of-type),
+  .marquee__sep { display: none; }
+  .marquee__item { white-space: normal; }
 }

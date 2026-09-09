@@ -82,128 +82,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-     2. Hero carousel
-     Auto-advance is paused on hover, on keyboard focus, when the tab is hidden,
-     when the hero scrolls out of view, and whenever reduced motion is requested.
-     ------------------------------------------------------------------------ */
-  function initHero() {
-    var root = document.querySelector('[data-carousel]');
-    if (!root) return;
-
-    var slides = Array.prototype.slice.call(root.querySelectorAll('[data-slide]'));
-    var dots = Array.prototype.slice.call(root.querySelectorAll('[data-dot]'));
-    var prevBtn = root.querySelector('[data-carousel-prev]');
-    var nextBtn = root.querySelector('[data-carousel-next]');
-    var playBtn = root.querySelector('[data-carousel-play]');
-    var counter = root.querySelector('[data-carousel-counter]');
-    if (slides.length < 2) return;
-
-    var INTERVAL = 6500;
-    var index = 0;
-    var timer = null;
-    var userPaused = reduceMotion.matches;
-    var hovered = false;
-    var focused = false;
-    var visible = true;
-
-    function render() {
-      slides.forEach(function (slide, i) {
-        var active = i === index;
-        slide.classList.toggle('is-active', active);
-        slide.setAttribute('aria-hidden', String(!active));
-      });
-      dots.forEach(function (dot, i) {
-        dot.setAttribute('aria-selected', String(i === index));
-      });
-      if (counter) {
-        counter.textContent = String(index + 1).padStart(2, '0') + ' / ' +
-          String(slides.length).padStart(2, '0');
-      }
-    }
-
-    function go(next) {
-      index = (next + slides.length) % slides.length;
-      render();
-    }
-
-    function shouldRun() {
-      return !userPaused && !hovered && !focused && visible && !document.hidden;
-    }
-
-    function tick() {
-      stop();
-      if (!shouldRun()) return;
-      timer = window.setTimeout(function () { go(index + 1); tick(); }, INTERVAL);
-    }
-
-    function stop() {
-      if (timer) { window.clearTimeout(timer); timer = null; }
-    }
-
-    function syncPlayBtn() {
-      if (!playBtn) return;
-      var playing = shouldRun();
-      playBtn.setAttribute('aria-pressed', String(userPaused));
-      playBtn.setAttribute('aria-label', userPaused ? 'Riprendi lo scorrimento automatico' : 'Metti in pausa lo scorrimento automatico');
-      playBtn.querySelector('[data-icon-play]').hidden = !userPaused;
-      playBtn.querySelector('[data-icon-pause]').hidden = userPaused;
-      void playing;
-    }
-
-    function refresh() { tick(); syncPlayBtn(); }
-
-    if (prevBtn) prevBtn.addEventListener('click', function () { go(index - 1); refresh(); });
-    if (nextBtn) nextBtn.addEventListener('click', function () { go(index + 1); refresh(); });
-    dots.forEach(function (dot, i) {
-      dot.addEventListener('click', function () { go(i); refresh(); });
-    });
-    if (playBtn) {
-      playBtn.addEventListener('click', function () { userPaused = !userPaused; refresh(); });
-    }
-
-    root.addEventListener('mouseenter', function () { hovered = true; refresh(); });
-    root.addEventListener('mouseleave', function () { hovered = false; refresh(); });
-    root.addEventListener('focusin', function () { focused = true; refresh(); });
-    root.addEventListener('focusout', function () {
-      focused = root.contains(document.activeElement);
-      refresh();
-    });
-
-    root.addEventListener('keydown', function (e) {
-      if (e.key === 'ArrowLeft') { e.preventDefault(); go(index - 1); refresh(); }
-      if (e.key === 'ArrowRight') { e.preventDefault(); go(index + 1); refresh(); }
-    });
-
-    document.addEventListener('visibilitychange', refresh);
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        visible = entries[0].isIntersecting;
-        refresh();
-      }, { threshold: 0.15 }).observe(root);
-    }
-
-    reduceMotion.addEventListener('change', function (e) {
-      userPaused = e.matches;
-      refresh();
-    });
-
-    // Touch swipe
-    var startX = null;
-    root.addEventListener('touchstart', function (e) { startX = e.touches[0].clientX; }, { passive: true });
-    root.addEventListener('touchend', function (e) {
-      if (startX === null) return;
-      var dx = e.changedTouches[0].clientX - startX;
-      if (Math.abs(dx) > 50) { go(dx < 0 ? index + 1 : index - 1); refresh(); }
-      startX = null;
-    }, { passive: true });
-
-    render();
-    refresh();
-  }
-
-  /* ---------------------------------------------------------------------------
-     3. Scroll reveal
+     2. Scroll reveal
      ------------------------------------------------------------------------ */
   function initReveal() {
     var items = Array.prototype.slice.call(document.querySelectorAll('.reveal'));
@@ -226,7 +105,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-     4. Gallery: filters + lightbox
+     3. Gallery: filters + lightbox
      ------------------------------------------------------------------------ */
   function initGallery() {
     var grid = document.querySelector('[data-gallery]');
@@ -318,7 +197,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-     5. Contact form
+     4. Contact form
      Client-side validation with a linked error summary, then one of three routes:
        1. data-endpoint set  -> POST in background (needs a form service)
        2. otherwise          -> opens WhatsApp with the request already written
@@ -531,7 +410,7 @@
   }
 
   /* ---------------------------------------------------------------------------
-     6. Map
+     5. Map
      The Google Maps iframe is injected only after an explicit click, so the page
      sets no third-party cookies for visitors who never ask for the map.
      ------------------------------------------------------------------------ */
@@ -545,7 +424,7 @@
     button.addEventListener('click', function () {
       var frame = document.createElement('iframe');
       frame.src = map.dataset.src;
-      frame.title = 'Mappa: Reviere Studio, Via Montevergine 159, Rutigliano';
+      frame.title = 'Mappa: Reviere Studio, Via Montevergine 161, Rutigliano';
       frame.loading = 'lazy';
       frame.referrerPolicy = 'no-referrer-when-downgrade';
       frame.setAttribute('allowfullscreen', '');
@@ -560,7 +439,6 @@
      ------------------------------------------------------------------------ */
   function boot() {
     initNav();
-    initHero();
     initReveal();
     initGallery();
     initForm();

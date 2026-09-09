@@ -5,16 +5,16 @@ si carica così com'è su qualsiasi hosting (Netlify, Vercel, GitHub Pages, Arub
 
 ```
 site/
-├── index.html         Home: hero con carosello, i due spazi, tutte le foto della struttura
+├── index.html         Home: hero a tutta pagina, i due spazi, tutte le foto della struttura
 ├── galleria.html      Galleria completa (44 foto) con filtri e lightbox
 ├── contatti.html      Modulo, WhatsApp, email, indirizzo
 ├── robots.txt / sitemap.xml
 └── assets/
     ├── brand/         Logo e favicon
     ├── css/style.css  Design system completo (token, componenti, responsive)
-    ├── js/main.js     Navigazione, carosello, galleria, validazione modulo
+    ├── js/main.js     Navigazione, galleria, validazione modulo, mappa
     └── img/
-        ├── hero/      3 immagini del carosello (2400px)
+        ├── hero/      Foto dell'hero: orizzontale 2400px + ritaglio verticale per telefoni
         ├── studio/    14 foto della struttura (1800px)
         ├── gallery/   44 foto a piena risoluzione per il lightbox (1700px)
         └── gallery-thumb/ Le stesse 44 in miniatura (800px)
@@ -33,7 +33,7 @@ Questi valori sono **segnaposto**. Cerca e sostituisci in tutti e tre i file `.h
 | Orari di risposta | `Tutti i giorni, 9:00 – 21:00` |
 
 Telefono, WhatsApp e indirizzo sono invece quelli reali:
-**+39 331 962 3778** — **Via Montevergine 159, 70018 Rutigliano (BA)**.
+**+39 331 962 3778** — **Via Montevergine 161, 70018 Rutigliano (BA)**.
 
 ## Mappa
 
@@ -49,8 +49,30 @@ Se vuoi caricarla subito all'apertura (ricordandoti però del consenso cookie),
 in `contatti.html` sostituisci il blocco `<div class="map" …>` con l'iframe diretto,
 oppure in `assets/js/main.js`, dentro `initMap()`, chiama `button.click()` all'avvio.
 
-Le coordinate usate nei dati strutturati sono `41.0032095, 16.9998911`. Se il civico
-159 cade leggermente fuori posto, correggile lì e nel link `MAPS_QUERY`.
+I collegamenti a Google Maps sono **due, con compiti diversi**:
+
+| Dove | URL | Cosa fa |
+|---|---|---|
+| Pulsante *Indicazioni* | `https://www.google.com/maps/dir/?api=1&destination=Revi%C3%A8re+Studio,+Via+Montevergine+161,+70018+Rutigliano+BA` | avvia il percorso dalla posizione di chi clicca |
+| Riga *Dove siamo*, `hasMap` | `https://maps.google.com/?cid=9562823861597996504` | apre la scheda dell'attività |
+
+**Non usare il link lungo che Maps copia dalla barra degli indirizzi**
+(`/maps/place/.../data=!3m1!4b1!4m6...`). Contiene un blocco `data=` che Google
+interpreta solo dentro una sessione attiva: aperto a freddo lo ignora e mostra
+la mappa centrata sulle coordinate dopo la `@`, che sono il **centro
+dell'inquadratura**, non il locale — nel nostro caso 215 m più a ovest.
+Ha anche i parametri `entry` e `g_ep`, token di sessione che scadono.
+
+Il `cid` è l'identificativo stabile dell'attività: è la conversione in decimale
+di `0x84b5f9a2d82d85d8`, la seconda metà del campo `!1s` di quel link lungo.
+
+Le coordinate reali dell'attività sono **41.0021787, 16.9991612** (prese da `!3d`/`!4d`
+dello stesso link) e stanno nei dati strutturati di tutte e tre le pagine. Le
+precedenti, ricavate geocodificando la via, erano **130 metri fuori posto**.
+
+Se un giorno la scheda Google cambia indirizzo o nome, vanno aggiornati: il link
+della scheda in tutte e tre le pagine, `ll=` di Apple Maps e `q=`/`ll=` della mappa
+incorporata in `contatti.html`.
 
 ## Modulo di contatto
 
@@ -126,9 +148,23 @@ Poi apri <http://localhost:4321>.
 - **Immagini**: ottimizzate in JPEG dai file originali in `Media/` (che restano intatti).
   Gli originali pesavano fino a 23 MB l'uno; qui il totale è ~24 MB con lazy loading.
   Se aggiungi foto, ridimensionale prima di caricarle.
-- **Carosello**: si ferma al passaggio del mouse, quando riceve il focus da tastiera,
-  quando la scheda è in secondo piano e quando il sistema chiede `prefers-reduced-motion`.
-  Ha comandi avanti/indietro/pausa e supporta le frecce della tastiera e lo swipe.
+- **Titolo dell'hero — marquee**: la frase *Sanctuary of sound, light, private
+  vibes* scorre da bordo a bordo, sul modello di `times-event.de`. La pista
+  (`.marquee__track`) contiene **due sequenze identiche** e scorre di `-50%`:
+  arrivata in fondo riparte esattamente dov'era, quindi il ciclo non ha stacchi.
+  È tutto CSS, nessun JavaScript.
+  **Se cambi la frase, modificala in tutte e sei le ripetizioni** (tre per
+  sequenza) e anche nell'`aria-label` dell'`<h1>`: le ripetizioni sono
+  `aria-hidden`, il testo che leggono gli screen reader è solo quello.
+  Il movimento si ferma al passaggio del mouse e sul focus da tastiera; con
+  `prefers-reduced-motion` l'animazione sparisce e resta una sola frase
+  centrata su tre righe.
+- **Hero**: una sola immagine fissa, `foto-drone-1.jpg`. La foto è più larga del
+  riquadro, quindi il ritaglio avviene ai lati: su desktop resta visibile l'89% della
+  larghezza, su un telefono scenderebbe al **26%** e la struttura non si
+  riconoscerebbe. Per questo `index.html` usa un `<picture>` che sotto i 768px
+  serve `foto-drone-1-mobile.jpg`, un ritaglio verticale centrato sull'edificio.
+  Se cambi la foto dell'hero, rigenera entrambe le versioni.
 - **Accessibilità**: contrasto verificato, focus visibile, tutte le immagini con testo
   alternativo, riepilogo errori del modulo collegato ai campi, lightbox con trappola
   di focus e chiusura con `Esc`.
