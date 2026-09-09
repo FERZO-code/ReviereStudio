@@ -705,6 +705,12 @@ h1, h2, h3, h4 {
   grid-template-columns: 1fr;
   align-items: center;
 }
+/* In colonna singola le foto vanno dopo il testo: prima si legge di che
+   sala si tratta, poi la si vede. Nel markup le figure restano prima
+   perche' sul desktop a due colonne devono poter stare a sinistra. */
+@media (max-width: 959px) {
+  .room__media { order: 2; }
+}
 @media (min-width: 960px) {
   .room__grid { grid-template-columns: 1.05fr 0.95fr; }
   .room--reverse .room__media { order: 2; }
@@ -1093,15 +1099,33 @@ h1, h2, h3, h4 {
   color: var(--muted);
   line-height: 1.5;
 }
-.consent input {
+.consent input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
   width: 22px;
   height: 22px;
   min-height: 0;
   flex: none;
   margin-top: 2px;
-  accent-color: var(--red-line);
   padding: 0;
+  background: var(--ink-2);
+  border: 1px solid var(--line-strong);
+  transition: background var(--dur-fast) var(--ease),
+              border-color var(--dur-fast) var(--ease);
 }
+
+.consent input[type='checkbox']:hover { border-color: var(--bone-dim); }
+
+/* Da spuntata si riempie del rosso di marchio con il segno avorio:
+   9,7:1 di contrasto, e il bordo piu' chiaro stacca la forma dal fondo. */
+.consent input[type='checkbox']:checked {
+  background: var(--red)
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23F2EDE6' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6L9 17l-5-5'/%3E%3C/svg%3E")
+    center / 14px 14px no-repeat;
+  border-color: var(--red-line);
+}
+
+.field.has-error .consent input[type='checkbox'] { border-color: var(--danger); }
 
 /* Contact info panel */
 .contact-card {
