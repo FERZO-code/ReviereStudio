@@ -437,12 +437,41 @@
   /* ---------------------------------------------------------------------------
      Boot
      ------------------------------------------------------------------------ */
+  /* ---------------------------------------------------------------------------
+     7. Deep link
+     Chi arriva da un link con ancora (es. contatti.html#posizione) deve finire
+     sulla sezione anche se font e immagini, caricandosi dopo il primo salto,
+     spostano il contenuto. Al "load" si riallinea una volta, senza animazione.
+     Se nel frattempo la persona ha gia' scrollato da se', non la si sposta.
+     ------------------------------------------------------------------------ */
+  function initDeepLink() {
+    if (!location.hash) return;
+    var target = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (!target) return;
+
+    var userMoved = false;
+    var stop = function () { userMoved = true; };
+    ['wheel', 'touchstart', 'keydown'].forEach(function (type) {
+      window.addEventListener(type, stop, { once: true, passive: true });
+    });
+
+    window.addEventListener('load', function () {
+      var align = function () {
+        if (userMoved) return;
+        target.scrollIntoView({ behavior: 'instant', block: 'start' });
+      };
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(align);
+      else align();
+    }, { once: true });
+  }
+
   function boot() {
     initNav();
     initReveal();
     initGallery();
     initForm();
     initMap();
+    initDeepLink();
     var year = document.querySelector('[data-year]');
     if (year) year.textContent = new Date().getFullYear();
   }
