@@ -534,7 +534,7 @@ h1, h2, h3, h4 {
 .marquee__track {
   display: flex;
   width: max-content;
-  animation: marquee-scroll 60s linear infinite;
+  animation: marquee-scroll 45s linear infinite;
   will-change: transform;
 }
 
