@@ -26,9 +26,8 @@ Questi valori sono **segnaposto**. Cerca e sostituisci in tutti e tre i file `.h
 
 | Cosa | Valore attuale (finto) |
 |------|------------------------|
-| Email | `info@revierestudio.it` |
 | Instagram | `https://www.instagram.com/reviere.studio/` |
-| Dominio | `https://www.revierestudio.it` (anche in `robots.txt` e `sitemap.xml`) |
+| Dominio | `https://revierestudio.com` (anche in `robots.txt` e `sitemap.xml`) |
 | Partita IVA | `00000000000` (nel footer) |
 | Orari di risposta | `Tutti i giorni, 9:00 – 21:00` |
 
@@ -82,8 +81,7 @@ arrivano **su WhatsApp**.
 **Come funziona.** Il modulo valida i campi, poi apre WhatsApp con la richiesta
 già scritta nella chat di `+39 331 962 3778`. È il visitatore a premere invio dal
 proprio account: da lì la conversazione continua normalmente in chat.
-Sotto il pulsante c'è il collegamento *"Invia la richiesta via email"*, che manda
-gli stessi dati come email precompilata per chi non usa WhatsApp.
+Sotto il pulsante c'è il numero da chiamare per chi non usa WhatsApp.
 
 Il messaggio che parte è formattato per essere leggibile in chat, con la data
 convertita in formato italiano e i campi vuoti omessi:
@@ -118,8 +116,7 @@ in `data-endpoint`:
 ```html
 <form class="form" data-contact-form novalidate
       data-endpoint="https://formspree.io/f/xxxxxxxx"
-      data-whatsapp="393319623778"
-      data-mailto="info@revierestudio.it">
+      data-whatsapp="393319623778">
 ```
 
 Da quel momento l'invio avviene in background con conferma sulla pagina, e
@@ -201,3 +198,24 @@ Poi apri <http://localhost:4321>.
 2. In `galleria.html` duplica un blocco `<button class="masonry__item" …>`, aggiornando
    `data-full`, `src`, `alt`, `width`, `height` e `data-cat`
    (`serate`, `ospiti` o `spazi`).
+
+
+## SEO
+
+- **Dominio canonico: `https://revierestudio.com`** (senza `www`). Canonical, `og:url`,
+  sitemap, robots e dati strutturati usano tutti questo indirizzo: il `www` deve
+  reindirizzare qui, mai il contrario.
+- **Ogni pagina** ha title e description propri, `robots` con `max-image-preview:large`,
+  Open Graph e Twitter con un'immagine dedicata 1200×630 (`assets/img/og-reviere-studio.jpg`).
+- **Dati strutturati** (JSON-LD `@graph`, uguali nella parte "attività" su tutte le pagine):
+  `LocalBusiness` + `EventVenue` con indirizzo, telefono, coordinate e scheda Google;
+  `WebSite`; la pagina (`WebPage`, `ImageGallery`, `ContactPage`); breadcrumb sulle
+  pagine interne. `alternateName: "Revière Studio"` lega il sito alla scheda Google,
+  che usa quella grafia.
+- **H1 della home** è testuale e nascosto (`.visually-hidden`): il marquee è decorativo,
+  `aria-hidden` e `data-nosnippet`, così la frase ripetuta non finisce negli snippet.
+- `sitemap.xml` elenca pagine e immagini; `vercel.json` imposta la cache degli asset e il
+  redirect `/index.html` → `/`; `404.html` è la pagina di errore (non indicizzata).
+- **Se cambi indirizzo, telefono o orari**, aggiornali in tre posti insieme: JSON-LD delle
+  tre pagine, piè di pagina, scheda Google. Devono coincidere alla lettera.
+- **Se aggiungi pagine o foto**, aggiungile a `sitemap.xml` e aggiorna `<lastmod>`.

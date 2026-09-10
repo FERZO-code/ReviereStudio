@@ -184,6 +184,20 @@ h1, h2, h3, h4 {
 
 .accent { color: var(--sand); }
 
+/* Testo presente per motori di ricerca e screen reader, invisibile a schermo. */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
 /* Layout ------------------------------------------------------------------- */
 .wrap {
   width: 100%;
@@ -505,6 +519,8 @@ h1, h2, h3, h4 {
    esattamente dove si trovava, quindi il ciclo non ha stacchi.
    -------------------------------------------------------------------------- */
 .marquee {
+  font-family: var(--font-display);
+  font-stretch: var(--wide);
   width: 100vw;
   max-width: 100vw;
   margin-left: calc(50% - 50vw);

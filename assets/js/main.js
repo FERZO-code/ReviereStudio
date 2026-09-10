@@ -198,12 +198,11 @@
 
   /* ---------------------------------------------------------------------------
      4. Contact form
-     Client-side validation with a linked error summary, then one of three routes:
+     Client-side validation with a linked error summary, then one of two routes:
        1. data-endpoint set  -> POST in background (needs a form service)
        2. otherwise          -> opens WhatsApp with the request already written
-       3. secondary link     -> same request as a pre-filled e-mail
-     Routes 2 and 3 need no server: the visitor sends the message from their own
-     account, so the request arrives in the venue's own WhatsApp or inbox.
+     Route 2 needs no server: the visitor sends the message from their own
+     account, so the request arrives in the venue's own WhatsApp chat.
      ------------------------------------------------------------------------ */
   function initForm() {
     var form = document.querySelector('[data-contact-form]');
@@ -214,9 +213,7 @@
     var statusBox = form.querySelector('[data-form-status]');
     var submitBtn = form.querySelector('[data-form-submit]');
     var endpoint = (form.dataset.endpoint || '').trim();
-    var mailto = form.dataset.mailto || '';
     var whatsapp = (form.dataset.whatsapp || '').replace(/\D/g, '');
-    var mailLink = form.querySelector('[data-form-mail]');
 
     var RULES = {
       nome:      function (v) { return v.trim().length >= 2 || 'Inserisci il tuo nome e cognome.'; },
@@ -267,20 +264,6 @@
     function formatDate(iso) {
       var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso || '');
       return m ? m[3] + '/' + m[2] + '/' + m[1] : '';
-    }
-
-    function buildBody(data) {
-      return [
-        'Nome: ' + data.nome,
-        'Email: ' + data.email,
-        'Telefono: ' + (data.telefono || '—'),
-        'Tipo di evento: ' + data.tipo,
-        'Data desiderata: ' + (formatDate(data.data) || '—'),
-        'Numero ospiti: ' + (data.ospiti || '—'),
-        '',
-        'Messaggio:',
-        data.messaggio
-      ].join('\n');
     }
 
     // Su WhatsApp il testo si legge in chat: niente etichette vuote.
@@ -344,33 +327,13 @@
       statusBox.innerHTML = html;
     }
 
-    function sendByMail(data) {
-      var subject = 'Richiesta ' + data.tipo + ' — ' + data.nome;
-      window.location.href = 'mailto:' + mailto +
-        '?subject=' + encodeURIComponent(subject) +
-        '&body=' + encodeURIComponent(buildBody(data));
-      showStatus('ok',
-        '<strong>Abbiamo aperto il tuo programma di posta</strong> con la richiesta gi&agrave; scritta: ' +
-        'premi invio per spedirla. Se non si &egrave; aperto nulla, scrivici a ' +
-        '<a href="mailto:' + mailto + '">' + mailto + '</a>.');
-    }
-
     function sendByWhatsapp(data) {
       openExternal('https://wa.me/' + whatsapp +
         '?text=' + encodeURIComponent(buildWhatsappText(data)));
       showStatus('ok',
         '<strong>Abbiamo aperto WhatsApp con la richiesta gi&agrave; scritta.</strong> ' +
         'Premi invio nella chat per mandarcela: da l&igrave; ti rispondiamo direttamente. ' +
-        'Se WhatsApp non si &egrave; aperto, usa il collegamento qui sotto per inviarla via email.');
-    }
-
-    // Percorso secondario: stessa richiesta, ma via email.
-    if (mailLink) {
-      mailLink.addEventListener('click', function (e) {
-        e.preventDefault();
-        if (statusBox) statusBox.hidden = true;
-        if (validateAll()) sendByMail(collect());
-      });
+        'Se WhatsApp non si &egrave; aperto, chiamaci al numero qui sotto.');
     }
 
     form.addEventListener('submit', function (e) {
@@ -382,9 +345,8 @@
 
       if (!endpoint) {
         // Senza servizio di invio il messaggio parte dall'account del visitatore:
-        // WhatsApp se configurato, altrimenti la posta.
+        // si apre WhatsApp con la richiesta gia' scritta.
         if (whatsapp) sendByWhatsapp(data);
-        else sendByMail(data);
         return;
       }
 

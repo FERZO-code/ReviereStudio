@@ -1,18 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://www.revierestudio.it/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>1.0</priority>
+    <loc>https://revierestudio.com/</loc>
+    <lastmod>2026-09-10</lastmod>
+    <image:image><image:loc>https://revierestudio.com/assets/img/hero/foto-drone-1.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/hero/foto-drone-1-mobile.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-bancone-2.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/foto-bancone.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-scritta-reviere-studio.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-parete-console.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3007.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3338.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-drone-1.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-panoramica-esterna.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-albero.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-ingresso-orizzontale.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-scala-1.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-scala-2.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-scala-3.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-bagno.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-bagno-orizzontale.jpg</image:loc></image:image>
   </url>
   <url>
-    <loc>https://www.revierestudio.it/galleria.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <loc>https://revierestudio.com/galleria.html</loc>
+    <lastmod>2026-09-10</lastmod>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3007.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/hf-20260901-175102-d9425f81-b365-48ee-b247-f0814f4bec28.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2941.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/foto-albero.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-20260321-224159.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-20260325-165737.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2946.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/foto-bancone-2.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-20260325-170024.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2966.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2974.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/foto-bancone.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2970.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2971.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3032.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/foto-scritta-reviere-studio.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2973.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2979.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3044.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-5650.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2980.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2981.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3086.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-8671.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2983.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-2984.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3270.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3008.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-8670.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3027.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3028.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3029.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3030.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3264.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3338.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3339.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3340.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3342.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3343.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3344.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3346.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3348.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3350.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/gallery/img-3356.jpg</image:loc></image:image>
   </url>
   <url>
-    <loc>https://www.revierestudio.it/contatti.html</loc>
-    <changefreq>yearly</changefreq>
-    <priority>0.9</priority>
+    <loc>https://revierestudio.com/contatti.html</loc>
+    <lastmod>2026-09-10</lastmod>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-ingresso-orizzontale.jpg</image:loc></image:image>
+    <image:image><image:loc>https://revierestudio.com/assets/img/studio/foto-panoramica-esterna.jpg</image:loc></image:image>
   </url>
 </urlset>
